@@ -594,7 +594,6 @@ h1 {
   transform-style: preserve-3d;
   transition: transform 0.1s ease-out;
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .card-image {

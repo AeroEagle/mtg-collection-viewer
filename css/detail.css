@@ -492,7 +492,6 @@ body.has-art-bg::after {
   transform-style: preserve-3d;
   transition: transform 0.1s ease-out;
   border-radius: 12px;
-  overflow: hidden;
   --shimmer-x: 50%;
   --shimmer-y: 50%;
 }

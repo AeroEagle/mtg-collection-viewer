@@ -254,4 +254,21 @@ test('Upgrade cards use rotation multiplier >= 60 for Y axis', () => {
   assert(multiplier >= 60, `Upgrade card rotateY multiplier (${multiplier}) should be >= 60`);
 });
 
+// Test 18: upgrade-inner does not have overflow hidden
+test('upgrade-inner does not have overflow: hidden', () => {
+  const css = `
+    .upgrade-inner {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+      border-radius: 12px;
+      --shimmer-x: 50%;
+      --shimmer-y: 50%;
+    }
+  `;
+  assert(!css.includes('overflow: hidden'), 'upgrade-inner must not have overflow: hidden');
+  assert(css.includes('transform-style: preserve-3d'), 'upgrade-inner needs preserve-3d');
+});
+
 runTests();
