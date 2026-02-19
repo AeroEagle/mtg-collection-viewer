@@ -459,6 +459,23 @@ function updateStats() {
 
 // Setup event listeners
 function setupEventListeners() {
+  // Menu toggle
+  const menuToggle = document.getElementById('menu-toggle');
+  const menuDropdown = document.getElementById('menu-dropdown');
+  const menuOverlay = document.getElementById('menu-overlay');
+  
+  if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+      menuDropdown.classList.toggle('active');
+      menuOverlay.classList.toggle('active');
+    });
+    
+    menuOverlay.addEventListener('click', () => {
+      menuDropdown.classList.remove('active');
+      menuOverlay.classList.remove('active');
+    });
+  }
+  
   document.getElementById('toggle-lock').addEventListener('click', toggleLock);
   document.getElementById('search-cards').addEventListener('click', showSearchModal);
   document.getElementById('download-wishlist').addEventListener('click', downloadWishlist);
