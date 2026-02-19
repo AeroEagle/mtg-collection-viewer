@@ -31,21 +31,8 @@ async function verifyPassword(password) {
 // Toggle lock state
 async function toggleLock() {
   if (isLocked) {
-    // Unlock - ask for password
-    const password = prompt('Enter password to unlock binder:');
-    if (!password) return;
-    
-    if (await verifyPassword(password)) {
-      isLocked = false;
-      window.isLocked = false;
-      localStorage.setItem('binderLocked', '0');
-      updateLockUI();
-      showNotification('🔓 Binder unlocked');
-      // Reload to show localStorage version
-      location.reload();
-    } else {
-      showNotification('❌ Incorrect password');
-    }
+    // Unlock - show modal
+    showPasswordModal();
   } else {
     // Lock
     isLocked = true;
@@ -56,6 +43,54 @@ async function toggleLock() {
     // Reload to show git version
     location.reload();
   }
+}
+
+function showPasswordModal() {
+  const modal = document.getElementById('password-modal');
+  const input = document.getElementById('password-input');
+  const error = document.getElementById('password-error');
+  
+  modal.classList.remove('hidden');
+  input.value = '';
+  error.classList.add('hidden');
+  input.focus();
+  
+  // Handle submit
+  const submit = async () => {
+    const password = input.value;
+    if (!password) return;
+    
+    if (await verifyPassword(password)) {
+      isLocked = false;
+      window.isLocked = false;
+      localStorage.setItem('binderLocked', '0');
+      modal.classList.add('hidden');
+      showNotification('🔓 Binder unlocked');
+      location.reload();
+    } else {
+      error.classList.remove('hidden');
+      input.value = '';
+      input.focus();
+    }
+  };
+  
+  // Submit on button click
+  document.getElementById('password-submit').onclick = submit;
+  
+  // Submit on Enter key
+  input.onkeypress = (e) => {
+    if (e.key === 'Enter') submit();
+  };
+  
+  // Cancel
+  document.getElementById('password-cancel').onclick = () => {
+    modal.classList.add('hidden');
+  };
+  
+  // Close on outside click
+  modal.onclick = (e) => {
+    if (e.target === modal) modal.classList.add('hidden');
+  };
 }
 
 function updateLockUI() {

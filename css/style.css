@@ -2966,3 +2966,77 @@ h1 {
   color: #4caf50;
   font-size: 0.9em;
 }
+
+/* Password Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h2 {
+  margin: 0 0 15px 0;
+  color: var(--text-primary);
+}
+
+.modal-content p {
+  margin: 0 0 20px 0;
+  color: var(--text-secondary);
+}
+
+.modal-content input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--bg-tertiary);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.modal-content input[type="password"]:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.password-error {
+  margin-top: 10px;
+  padding: 10px;
+  background: #3a1e1e;
+  border: 1px solid #f44336;
+  border-radius: 6px;
+  color: #f44336;
+  text-align: center;
+}
+
+.password-error.hidden {
+  display: none;
+}

@@ -172,6 +172,20 @@
     <p>Right-click on any card in your collection and select "Add to Trading Binder"</p>
   </div>
 
+  <!-- Password Modal -->
+  <div id="password-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>🔓 Unlock Trading Binder</h2>
+      <p>Enter password to unlock editing:</p>
+      <input type="password" id="password-input" placeholder="Enter password" autocomplete="off">
+      <div class="modal-actions">
+        <button type="button" id="password-submit" class="btn">Unlock</button>
+        <button type="button" id="password-cancel" class="btn btn-secondary">Cancel</button>
+      </div>
+      <div id="password-error" class="password-error hidden">❌ Incorrect password</div>
+    </div>
+  </div>
+
   <script src="js/shared.js"></script>
   <script src="js/trading-binder.js"></script>
 </body>
