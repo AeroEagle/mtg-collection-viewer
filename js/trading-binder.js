@@ -44,6 +44,10 @@ async function loadBinder() {
     }
   }
   
+  // Set collection for filtering
+  collection = [...binderCards];
+  filteredCollection = [...binderCards];
+  
   renderBinder();
 }
 
@@ -61,11 +65,6 @@ function renderBinder() {
   
   container.style.display = 'grid';
   emptyState.style.display = 'none';
-  
-  // Set filteredCollection to binderCards and apply filters
-  collection = [...binderCards];
-  filteredCollection = [...binderCards];
-  applyFilters();
   
   // Count by oracle_id for duplicate badge
   const nameCounts = {};
@@ -110,7 +109,10 @@ function renderBinder() {
 function removeFromBinder(scryfallId) {
   binderCards = binderCards.filter(c => c.scryfallId !== scryfallId);
   saveBinder();
-  renderBinder();
+  // Reset collection and filteredCollection
+  collection = [...binderCards];
+  filteredCollection = [...binderCards];
+  applyFilters();
 }
 
 function saveBinder() {
@@ -171,6 +173,8 @@ async function onCollectionLoaded() {
     if (confirm('Clear all cards from your trading binder?')) {
       binderCards = [];
       saveBinder();
+      collection = [];
+      filteredCollection = [];
       renderBinder();
     }
   });
