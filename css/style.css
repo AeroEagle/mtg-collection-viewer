@@ -2953,3 +2953,11 @@ h1 {
 .btn-small.btn-secondary:hover {
   background: #666;
 }
+
+#toggle-lock.unlocked {
+  background: #2e7d32;
+}
+
+#toggle-lock.unlocked:hover {
+  background: #1b5e20;
+}
