@@ -2961,3 +2961,8 @@ h1 {
 #toggle-lock.unlocked:hover {
   background: #1b5e20;
 }
+
+.admin-indicator {
+  color: #4caf50;
+  font-size: 0.9em;
+}

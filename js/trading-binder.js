@@ -6,6 +6,15 @@ let removedCards = []; // Cards in git but not in localStorage
 let isLocked = true; // Binder is locked by default
 let passwordHash = null; // Password hash from git file
 
+// Check lock state from localStorage on page load
+const storedLockState = localStorage.getItem('binderLocked');
+if (storedLockState === '0') {
+  isLocked = false;
+}
+
+// Make isLocked available globally for shared.js
+window.isLocked = isLocked;
+
 // Hash password using SHA-256
 async function hashPassword(password) {
   const encoder = new TextEncoder();
@@ -30,6 +39,7 @@ async function toggleLock() {
     
     if (await verifyPassword(password)) {
       isLocked = false;
+      window.isLocked = false;
       updateLockUI();
       showNotification('🔓 Binder unlocked');
     } else {
@@ -38,6 +48,7 @@ async function toggleLock() {
   } else {
     // Lock
     isLocked = true;
+    window.isLocked = true;
     updateLockUI();
     showNotification('🔒 Binder locked');
   }
@@ -46,15 +57,47 @@ async function toggleLock() {
 function updateLockUI() {
   const lockBtn = document.getElementById('toggle-lock');
   const removeButtons = document.querySelectorAll('.remove-from-binder');
+  const syncBanner = document.getElementById('sync-banner');
+  const clearBtn = document.getElementById('clear-binder');
+  
+  // Update global lock state for other pages
+  localStorage.setItem('binderLocked', isLocked ? '1' : '0');
+  
+  // Update menu indicator
+  updateMenuLockIndicator();
   
   if (isLocked) {
     lockBtn.textContent = '🔒 Unlock Binder';
     lockBtn.classList.remove('unlocked');
     removeButtons.forEach(btn => btn.style.display = 'none');
+    if (syncBanner) syncBanner.style.display = 'none';
+    if (clearBtn) clearBtn.style.display = 'none';
   } else {
     lockBtn.textContent = '🔓 Lock Binder';
     lockBtn.classList.add('unlocked');
     removeButtons.forEach(btn => btn.style.display = 'block');
+    if (syncBanner && (localOnlyCards.length > 0 || removedCards.length > 0)) {
+      syncBanner.style.display = 'flex';
+    }
+    if (clearBtn) clearBtn.style.display = 'inline-block';
+  }
+}
+
+function updateMenuLockIndicator() {
+  const menuItem = document.querySelector('.menu-item[href="trading-binder.html"]');
+  if (!menuItem) return;
+  
+  const indicator = menuItem.querySelector('.admin-indicator') || document.createElement('span');
+  indicator.className = 'admin-indicator';
+  
+  if (!isLocked) {
+    indicator.textContent = ' 👤';
+    indicator.title = 'Admin logged in';
+    if (!menuItem.querySelector('.admin-indicator')) {
+      menuItem.appendChild(indicator);
+    }
+  } else {
+    indicator.remove();
   }
 }
 
