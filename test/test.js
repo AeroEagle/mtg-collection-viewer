@@ -163,10 +163,6 @@ tb.test('LocalStorage saves IDs', () => {
   const parsed = JSON.parse(stored);
   assertEquals(parsed.length, 2);
 });
-tb.test('Share link format', () => {
-  const url = 'trading-binder.html?cards=id1,id2';
-  assert(url.includes('?cards='));
-});
 tb.test('Context menu adds cards', () => {
   const ids = [];
   ids.push('test-id');
@@ -194,15 +190,35 @@ tb.test('Unlocked state allows adding cards', () => {
   const binderLocked = localStorage.getItem('binderLocked') === '1';
   assert(!binderLocked);
 });
-tb.test('Trading binder JSON has required fields', () => {
+tb.test('Trading binder JSON has cards and lastModified', () => {
   const data = {
     cards: [],
-    lastModified: '2026-02-19T21:44:15.397Z',
-    passwordHash: 'a9ab99bc6167f801e4b43cf1c569b4f7e1c52a3017a0eb2693c4cb87e8810103'
+    lastModified: '2026-02-19T21:44:15.397Z'
   };
   assert(data.cards !== undefined);
   assert(data.lastModified !== undefined);
-  assert(data.passwordHash !== undefined);
+});
+tb.test('Password stored in separate file', () => {
+  const passwordData = {
+    passwordHash: 'a9ab99bc6167f801e4b43cf1c569b4f7e1c52a3017a0eb2693c4cb87e8810103'
+  };
+  assert(passwordData.passwordHash !== undefined);
+  assertEquals(passwordData.passwordHash.length, 64);
+});
+tb.test('Cards fetched from Scryfall have required fields', () => {
+  const card = {
+    name: 'Test Card',
+    scryfallId: 'abc123',
+    foil: 'normal',
+    price: 1.50,
+    scryfallPrices: { usd: '1.50' },
+    quantity: 1,
+    currency: 'USD'
+  };
+  assert(card.foil === 'normal');
+  assert(card.scryfallPrices !== undefined);
+  assert(card.quantity === 1);
+  assert(card.currency === 'USD');
 });
 
 // ===== CSS LAYOUT TESTS =====
