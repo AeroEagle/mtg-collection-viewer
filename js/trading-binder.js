@@ -5,6 +5,7 @@ let localOnlyCards = []; // Cards in localStorage but not in git
 let removedCards = []; // Cards in git but not in localStorage
 let isLocked = true; // Binder is locked by default
 let passwordHash = null; // Password hash from git file
+let showOnlyPersisted = false; // Toggle for showing only persisted cards
 
 // Check lock state from localStorage on page load
 const storedLockState = localStorage.getItem('binderLocked');
@@ -59,6 +60,7 @@ function updateLockUI() {
   const removeButtons = document.querySelectorAll('.remove-from-binder');
   const syncBanner = document.getElementById('sync-banner');
   const clearBtn = document.getElementById('clear-binder');
+  const viewToggle = document.getElementById('view-toggle');
   
   // Update global lock state for other pages
   localStorage.setItem('binderLocked', isLocked ? '1' : '0');
@@ -72,6 +74,7 @@ function updateLockUI() {
     removeButtons.forEach(btn => btn.style.display = 'none');
     if (syncBanner) syncBanner.style.display = 'none';
     if (clearBtn) clearBtn.style.display = 'none';
+    if (viewToggle) viewToggle.style.display = 'none';
   } else {
     lockBtn.textContent = '🔓 Lock Binder';
     lockBtn.classList.add('unlocked');
@@ -80,6 +83,7 @@ function updateLockUI() {
       syncBanner.style.display = 'flex';
     }
     if (clearBtn) clearBtn.style.display = 'inline-block';
+    if (viewToggle) viewToggle.style.display = 'flex';
   }
 }
 
@@ -241,10 +245,16 @@ function renderBinder() {
   const container = document.getElementById('binder-collection');
   const emptyState = document.getElementById('empty-state');
   
-  if (binderCards.length === 0) {
+  // Filter cards based on toggle when unlocked
+  let cardsToShow = filteredCollection;
+  if (!isLocked && showOnlyPersisted) {
+    const persistedIds = persistedCards.map(c => c.scryfallId);
+    cardsToShow = filteredCollection.filter(c => persistedIds.includes(c.scryfallId));
+  }
+  
+  if (cardsToShow.length === 0) {
     container.style.display = 'none';
     emptyState.style.display = 'block';
-    filteredCollection = [];
     updateStats();
     return;
   }
@@ -254,12 +264,12 @@ function renderBinder() {
   
   // Count by oracle_id for duplicate badge
   const nameCounts = {};
-  filteredCollection.forEach(c => {
+  cardsToShow.forEach(c => {
     const key = c.oracle_id || c.name;
     nameCounts[key] = (nameCounts[key] || 0) + 1;
   });
   
-  container.innerHTML = filteredCollection.map(card => {
+  container.innerHTML = cardsToShow.map(card => {
     let html = renderCardHTML(card, nameCounts);
     
     // Add state badge
@@ -381,6 +391,13 @@ async function onCollectionLoaded() {
   }
   
   document.getElementById('toggle-lock').addEventListener('click', toggleLock);
+  
+  document.getElementById('view-toggle').addEventListener('click', () => {
+    showOnlyPersisted = !showOnlyPersisted;
+    const btn = document.getElementById('view-toggle');
+    btn.textContent = showOnlyPersisted ? '📋 Show All Cards' : '✓ Show Persisted Only';
+    renderBinder();
+  });
   
   document.getElementById('download-binder').addEventListener('click', downloadBinderFile);
   
