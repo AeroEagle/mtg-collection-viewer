@@ -3,15 +3,12 @@ let binderCards = [];
 let persistedCards = []; // Cards from git file
 let localOnlyCards = []; // Cards in localStorage but not in git
 let removedCards = []; // Cards in git but not in localStorage
-let isLocked = true; // Binder is locked by default
 let passwordHash = null; // Password hash from git file
 let showOnlyPersisted = false; // Toggle for showing only persisted cards
 
 // Check lock state from localStorage on page load
 const storedLockState = localStorage.getItem('binderLocked');
-if (storedLockState === '0') {
-  isLocked = false;
-}
+let isLocked = storedLockState !== '0'; // Unlocked only if explicitly set to '0'
 
 // Make isLocked available globally for shared.js
 window.isLocked = isLocked;
@@ -41,8 +38,11 @@ async function toggleLock() {
     if (await verifyPassword(password)) {
       isLocked = false;
       window.isLocked = false;
+      localStorage.setItem('binderLocked', '0');
       updateLockUI();
       showNotification('🔓 Binder unlocked');
+      // Reload to show localStorage version
+      location.reload();
     } else {
       showNotification('❌ Incorrect password');
     }
@@ -50,8 +50,11 @@ async function toggleLock() {
     // Lock
     isLocked = true;
     window.isLocked = true;
+    localStorage.setItem('binderLocked', '1');
     updateLockUI();
     showNotification('🔒 Binder locked');
+    // Reload to show git version
+    location.reload();
   }
 }
 
@@ -375,6 +378,9 @@ function downloadBinderFile() {
 
 async function onCollectionLoaded() {
   await loadBinder();
+  
+  // Update UI based on initial lock state
+  updateLockUI();
   
   // Setup price slider with binder-specific max value
   if (binderCards.length > 0) {
