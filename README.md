@@ -129,12 +129,17 @@ Choose between two price sources:
 
 ### 🔧 Additional Tools
 
-- **Trading Binder** - Curate cards for trading
-  - Right-click any card → "Add to Trading Binder"
-  - Works across all views (Collection Explorer, Binder, Carousel, Timeline, Detail)
-  - Generate shareable links with compressed URLs
-  - Filter and sort your trading cards
-  - Remove cards with one click
+- **Trading Binder** - Git-persisted trading binder with password-protected admin access
+  - **Lock/Unlock System** - Password modal (SHA-256 hash: `a9ab99bc6167f801e4b43cf1c569b4f7e1c52a3017a0eb2693c4cb87e8810103`)
+  - **Admin Mode (Unlocked)** - Add/remove cards, view pending changes, download JSON for git commit
+  - **User Mode (Locked)** - Read-only view of git-persisted cards only
+  - **Context Menu** - Right-click any card → "Add to Trading Binder" (admin only)
+  - **State Badges** - ✓ (persisted in git) and ⚠️ (pending local changes)
+  - **Sync Banner** - Shows unpersisted changes with "Download File" and "Reset to Git" buttons
+  - **View Toggle** - "Show Persisted Only" vs "Show All Cards" (admin only)
+  - **Share Link** - Simple `trading-binder.html` URL (loads from git)
+  - **Cache-Busting** - Prevents stale data with `?t=${Date.now()}`
+  - **Password File** - Separate `data/trading-binder-password.json` (never overwritten on download)
 - **Deck Checker** - Paste a deck list to see which cards you own vs. need
   - **Flavor Name Support** - Automatically matches cards with flavor names (e.g., "Gary, the Snail" → "Toxrill, the Corrosive")
   - Supports Moxfield format (handles double-faced cards with single slash)
