@@ -452,14 +452,19 @@ gt.test('4 players initialized', () => assertEquals(state.players.length, 4));
 
 ### Test Coverage
 
-**80+ tests across 8 suites:**
+**100+ tests across 12 suites:**
 - Game Tracker (30+ tests) - Core state, life, damage, counters, mana, commander damage, mulligans, advanced mechanics
 - Card Back Visibility (4 tests) - 3D flip effects, CSS transforms
 - Flavor Names (2 tests) - Deck checker flavor name matching
 - Foil Shimmer (2 tests) - Foil effect standardization
 - Copies Filter (2 tests) - Oracle ID duplicate detection
 - Detail Page (3 tests) - Card detail rendering, 3D effects
-- Trading Binder (3 tests) - LocalStorage, share links, context menu
+- Trading Binder (8 tests) - LocalStorage, lock state, password, Scryfall fields
+- Wishlist (14 tests) - Foil handling, batch fetch, detail links, persistence
+- Context Menu (4 tests) - Wishlist/binder options, lock states, localStorage
+- Deck Checker (3 tests) - Version selector, add all missing, game:paper filter
+- Detail Page Versions (4 tests) - Foil/non-foil expansion, null prices, drag prevention
+- CSS Layout (4 tests) - Price slider, autocomplete, filter positioning
 
 ### Running Tests
 

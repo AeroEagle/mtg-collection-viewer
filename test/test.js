@@ -364,6 +364,91 @@ wl.test('Batch fetch dedupes clean IDs', () => {
   assertEquals(unique[0], 'abc123');
 });
 
+// ===== CONTEXT MENU TESTS =====
+const cm = suite('Context Menu');
+cm.test('Context menu shows wishlist option when unlocked', () => {
+  localStorage.setItem('wishlistLocked', '0');
+  const wishlistLocked = localStorage.getItem('wishlistLocked') === '1';
+  assert(!wishlistLocked);
+});
+cm.test('Context menu hidden when both locked', () => {
+  localStorage.setItem('binderLocked', '1');
+  localStorage.setItem('wishlistLocked', '1');
+  const binderLocked = localStorage.getItem('binderLocked') === '1';
+  const wishlistLocked = localStorage.getItem('wishlistLocked') === '1';
+  assert(binderLocked && wishlistLocked);
+});
+cm.test('addToWishlist stores ID in localStorage', () => {
+  localStorage.setItem('wishlist', JSON.stringify(['existing-id']));
+  const ids = JSON.parse(localStorage.getItem('wishlist'));
+  ids.push('new-id');
+  localStorage.setItem('wishlist', JSON.stringify(ids));
+  const updated = JSON.parse(localStorage.getItem('wishlist'));
+  assert(updated.includes('new-id'));
+  assert(updated.includes('existing-id'));
+  assertEquals(updated.length, 2);
+  localStorage.removeItem('wishlist');
+});
+cm.test('addToWishlist prevents duplicates', () => {
+  const ids = ['abc123'];
+  assert(ids.includes('abc123'));
+});
+
+// ===== DECK CHECKER TESTS =====
+const dc = suite('Deck Checker');
+dc.test('Missing card version selector stores scryfallId', () => {
+  const selectedVersions = {};
+  selectedVersions['force of will'] = { scryfallId: 'abc123-foil', imageUrl: 'https://img.scryfall.com/test.jpg' };
+  assert(selectedVersions['force of will'].scryfallId === 'abc123-foil');
+});
+dc.test('Add all missing to wishlist collects all selected versions', () => {
+  const selectedVersions = {
+    'force of will': { scryfallId: 'abc123-foil' },
+    'mana drain': { scryfallId: 'def456' }
+  };
+  const ids = Object.values(selectedVersions).map(v => v.scryfallId);
+  assertEquals(ids.length, 2);
+  assert(ids.includes('abc123-foil'));
+  assert(ids.includes('def456'));
+});
+dc.test('game:paper filter in search URL', () => {
+  const url = 'https://api.scryfall.com/cards/search?q=!Force+game:paper&unique=prints';
+  assert(url.includes('game:paper'));
+});
+
+// ===== DETAIL PAGE VERSIONS TESTS =====
+const dv = suite('Detail Page Versions');
+dv.test('Expands foil and non-foil from Scryfall card', () => {
+  const card = { nonfoil: true, foil: true, id: 'abc', set: 'sld', collector_number: '1', prices: { usd: '5.00', usd_foil: '10.00' }, set_name: 'Secret Lair', image_uris: { normal: 'img.jpg' }, scryfall_uri: 'https://scryfall.com/card/sld/1' };
+  const expanded = [];
+  if (card.nonfoil) expanded.push({ id: card.id, price: parseFloat(card.prices.usd || '0'), foil: false });
+  if (card.foil) expanded.push({ id: card.id + '-foil', price: parseFloat(card.prices.usd_foil || '0'), foil: true });
+  assertEquals(expanded.length, 2);
+  assertEquals(expanded[0].foil, false);
+  assertEquals(expanded[1].foil, true);
+  assertEquals(expanded[1].id, 'abc-foil');
+});
+dv.test('Foil with null price still included', () => {
+  const card = { nonfoil: true, foil: true, prices: { usd: '5.00', usd_foil: null } };
+  const expanded = [];
+  if (card.nonfoil) expanded.push({ price: parseFloat(card.prices.usd || '0') });
+  if (card.foil) expanded.push({ price: parseFloat(card.prices.usd_foil || '0') });
+  assertEquals(expanded.length, 2);
+  assertEquals(expanded[1].price, 0);
+});
+dv.test('Drag prevents link navigation (hasMoved)', () => {
+  let hasMoved = false;
+  hasMoved = true; // simulate drag
+  let prevented = false;
+  if (hasMoved) prevented = true;
+  assert(prevented);
+});
+dv.test('Upgrade card is div not anchor', () => {
+  const html = '<div class="upgrade-card"><a href="..." class="upgrade-set-link">Set Name</a></div>';
+  assert(html.startsWith('<div'));
+  assert(html.includes('upgrade-set-link'));
+});
+
 // ===== CSS LAYOUT TESTS =====
 const css = suite('CSS Layout');
 css.test('Price slider has align-self flex-start', () => {

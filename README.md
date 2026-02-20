@@ -153,9 +153,12 @@ Choose between two price sources:
   - Convert deck to owned versions with foil indicators
   - Visual version selector with card images, 3D tilt, and foil shimmer
   - Handles multiple versions with different names (flavor names, actual names)
+  - **Change Missing Card Versions** - Pick specific printings (foil/non-foil) for cards you don't own
+  - **Add to Wishlist** - Right-click missing cards or "Add All Missing to Wishlist" button
   - Moxfield bulk edit format output
   - Copy to clipboard
   - Rate limiting protection with automatic retry
+  - All searches filtered to paper cards only (no MTGO promos)
 - **Trade Calculator** - Compare trade values with visual card selection
   - Select cards from your collection to trade away
   - Enter cards to receive (fetches all printings from Scryfall)
