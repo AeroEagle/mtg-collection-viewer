@@ -472,7 +472,15 @@ function showSearchModal() {
   };
   
   document.getElementById('search-close').onclick = () => modal.classList.add('hidden');
-  modal.onclick = (e) => { if (e.target === modal) modal.classList.add('hidden'); };
+  
+  // Close on overlay click, but not after dragging a card
+  let modalMouseDownTarget = null;
+  modal.addEventListener('mousedown', (e) => { modalMouseDownTarget = e.target; });
+  modal.addEventListener('mouseup', (e) => {
+    if (e.target === modal && modalMouseDownTarget === modal) {
+      modal.classList.add('hidden');
+    }
+  });
 }
 
 // === PASSWORD ===
