@@ -87,7 +87,8 @@ async function fetchCardsFromScryfall(scryfallIds) {
 // Convert Scryfall API card to our card format
 function scryfallToCard(card, foil = 'normal') {
   return {
-    name: card.name,
+    name: card.flavor_name || card.name,
+    oracleName: card.name,
     scryfallId: card.id + (foil === 'foil' ? '-foil' : ''),
     setCode: card.set.toUpperCase(),
     setName: card.set_name,
@@ -355,20 +356,24 @@ function showSearchModal() {
         return;
       }
       
-      // Group by name
+      // Group by oracle name
       const grouped = {};
       cards.forEach(c => {
-        if (!grouped[c.name]) grouped[c.name] = [];
-        grouped[c.name].push(c);
+        const key = c.oracleName || c.name;
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(c);
       });
       
       searchCardMap = {};
       
-      results.innerHTML = Object.entries(grouped).slice(0, 10).map(([name, versions]) => `
+      results.innerHTML = Object.entries(grouped).slice(0, 10).map(([oracleName, versions]) => {
+        const displayName = versions[0].name !== oracleName ? `${versions[0].name} <span style="color:var(--text-secondary);font-size:0.85em;">(${oracleName})</span>` : oracleName;
+        return `
         <div class="search-group">
-          <div class="search-group-name">${name} <span style="color:var(--text-secondary);">(${versions.length} version${versions.length > 1 ? 's' : ''})</span></div>
+          <div class="search-group-name">${displayName} <span style="color:var(--text-secondary);">(${versions.length} version${versions.length > 1 ? 's' : ''})</span></div>
           <div class="collection">${versions.map(cardObj => {
-            const inWishlist = wishlistCards.some(c => c.scryfallId === cardObj.scryfallId);
+            const baseId = cardObj.scryfallId.replace(/-foil$/, '');
+            const inWishlist = wishlistCards.some(c => c.scryfallId === cardObj.scryfallId || c.scryfallId.replace(/-foil$/, '') === baseId);
             searchCardMap[cardObj.scryfallId] = cardObj;
             let html = renderCardHTML(cardObj, {});
             const realId = cardObj.scryfallId.replace(/-foil$/, '');
@@ -381,7 +386,7 @@ function showSearchModal() {
             </div>`;
           }).join('')}</div>
         </div>
-      `).join('');
+      `}).join('');
       
       // Load images
       results.querySelectorAll('.card-image-wrapper').forEach(wrapper => {
