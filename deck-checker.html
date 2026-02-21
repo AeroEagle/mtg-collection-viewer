@@ -208,7 +208,8 @@
           collectorNumber,
           foil,
           type_line: cached?.type_line || '',
-          setName: parts[2]
+          setName: parts[2],
+          oracle_id: cached?.oracle_id
         };
         
         if (!collectionNames.has(name)) {
@@ -289,33 +290,15 @@
 
     async function checkAlternateNames(cardName) {
       try {
-        // Fetch card from Scryfall to get all printings
         const response = await fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(cardName)}`);
         if (!response.ok) return null;
         const card = await response.json();
         
-        // Get all possible names for this card
-        const namesToCheck = [card.name.toLowerCase()];
-        if (card.flavor_name) namesToCheck.push(card.flavor_name.toLowerCase());
-        
-        // Check if we own any version with any of these names
-        for (const name of namesToCheck) {
-          if (collectionNames.has(name)) {
-            return collectionNames.get(name);
-          }
-        }
-        
-        // Check all printings for flavor names
-        const printingsResponse = await fetch(`https://api.scryfall.com/cards/search?q=!"${encodeURIComponent(card.name)}"+game:paper&unique=prints`);
-        if (printingsResponse.ok) {
-          const printings = await printingsResponse.json();
-          for (const printing of printings.data) {
-            if (printing.flavor_name) {
-              const flavorName = printing.flavor_name.toLowerCase();
-              if (collectionNames.has(flavorName)) {
-                return collectionNames.get(flavorName);
-              }
-            }
+        // Check oracle_id against all cards in collection
+        for (const [name, data] of collectionNames.entries()) {
+          const cached = await getCardData(data.scryfallId);
+          if (cached?.oracle_id === card.oracle_id) {
+            return data;
           }
         }
         
