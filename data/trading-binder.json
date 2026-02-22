@@ -2,22 +2,22 @@
   "cards": [
     {
       "scryfallId": "ec750874-33fb-44d6-915e-ba0ece9bef74",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
       "scryfallId": "3f4a8acd-1d49-4fa7-a88e-83cfe741de89",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
       "scryfallId": "f743b688-25e8-421e-97b5-d294dda34817",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
       "scryfallId": "0574d09f-5667-4ecf-bbbb-a1a0ed24068d",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
@@ -37,12 +37,12 @@
     },
     {
       "scryfallId": "c3eb3895-b64c-46ab-b704-3c46963920ba",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
       "scryfallId": "202a98ec-3ce9-47c6-8f8e-cd421e71631d",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
@@ -52,7 +52,7 @@
     },
     {
       "scryfallId": "b4bbf009-0798-4d8b-b375-6d6fde975c34",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "scryfallId": "5b9fe249-9bda-462b-922c-f01c904c233a",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
@@ -72,12 +72,12 @@
     },
     {
       "scryfallId": "b9e8c1c1-1917-4858-afd1-ea4412d02375",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
       "scryfallId": "fb220c6c-8dda-45f4-87fa-f754e94fac42",
-      "foil": "normal",
+      "foil": "foil",
       "addedAt": "2026-02-22T03:47:06.562Z"
     },
     {
@@ -91,5 +91,5 @@
       "addedAt": "2026-02-22T03:47:06.562Z"
     }
   ],
-  "lastModified": "2026-02-22T03:47:06.562Z"
+  "lastModified": "2026-02-22T03:53:32.687Z"
 }
