@@ -419,8 +419,16 @@ function updateStats() {
   if (valueEl) valueEl.textContent = formatPrice(totalValue, currency);
 }
 
+async function fetchWithFallback(paths) {
+  for (const path of paths) {
+    const response = await fetch(path);
+    if (response.ok) return response;
+  }
+  return { ok: false, status: 404, text: () => Promise.resolve('') };
+}
+
 async function loadCollection() {
-  const response = await fetch('data/Collection.csv');
+  const response = await fetchWithFallback(['data/Collection.csv', 'data/collection.csv']);
   if (!response.ok) {
     console.error('Failed to load Collection.csv:', response.status);
     collection = [];
